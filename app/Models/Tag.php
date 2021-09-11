@@ -41,7 +41,8 @@ class Tag extends Model
     }
 
 
-    public function articles(){
+    public function articles()
+    {
         return $this->hasManyThrough(
             Article::class,
             ArticleTag::class,

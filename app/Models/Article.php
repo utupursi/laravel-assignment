@@ -32,11 +32,13 @@ class Article extends Model
     ];
 
 
-    public function comment(){
-        return $this->hasMany(ArticleComment::class,'article_id');
+    public function comment()
+    {
+        return $this->hasMany(ArticleComment::class, 'article_id');
     }
 
-    public function comments(){
+    public function comments()
+    {
         return $this->hasManyThrough(
             Comment::class,
             ArticleComment::class,
@@ -47,7 +49,8 @@ class Article extends Model
         );
     }
 
-    public function tags(){
+    public function tags()
+    {
         return $this->hasManyThrough(
             Tag::class,
             ArticleTag::class,
@@ -57,8 +60,6 @@ class Article extends Model
             'tag_id' // Local key on the environments table...
         );
     }
-
-
 
 
 }

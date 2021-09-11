@@ -85,7 +85,7 @@ class TagController extends Controller
                     $fail('The sort parameter is invalid.');
                 }
             }],
-            'order' => ['nullable','string', function ($attribute, $value, $fail) {
+            'order' => ['nullable', 'string', function ($attribute, $value, $fail) {
                 if ($value != 'asc' && $value != 'desc') {
                     $fail('The order parameter is invalid.');
                 }
@@ -111,7 +111,7 @@ class TagController extends Controller
                     $fail('The sort parameter is invalid.');
                 }
             }],
-            'order' => ['nullable','string', function ($attribute, $value, $fail) {
+            'order' => ['nullable', 'string', function ($attribute, $value, $fail) {
                 if ($value != 'asc' && $value != 'desc') {
                     $fail('The order parameter is invalid.');
                 }

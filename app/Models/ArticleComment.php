@@ -32,8 +32,4 @@ class ArticleComment extends Model
 //    ];
 
 
-
-
-
-
 }
