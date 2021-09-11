@@ -32,27 +32,19 @@ class Article extends Model
     ];
 
 
-    public function getFilterScopes(): array
-    {
-        return [
-            'id' => [
-                'hasParam' => true,
-                'scopeMethod' => 'id'
-            ],
-            'status' => [
-                'hasParam' => true,
-                'scopeMethod' => 'status'
-            ],
-            'title' => [
-                'hasParam' => true,
-                'scopeMethod' => 'titleTranslation'
-            ],
-
-        ];
-    }
-
     public function comment(){
         return $this->hasMany(ArticleComment::class,'article_id');
+    }
+
+    public function comments(){
+        return $this->hasManyThrough(
+            Comment::class,
+            ArticleComment::class,
+            'article_id', // Foreign key on the environments table...
+            'id', // Foreign key on the deployments table...
+            'id', // Local key on the projects table...
+            'comment_id' // Local key on the environments table...
+        );
     }
 
     public function tags(){

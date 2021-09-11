@@ -23,5 +23,7 @@ use Illuminate\Support\Facades\Route;
 //});
 
 Route::get('/articles', [\App\Http\Controllers\ArticleController::class, 'getArticle']);
-Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login'])->name('login');
-Route::post('/register', [\App\Http\Controllers\AuthController::class, 'register'])->name('register');
+Route::get('/articles/{id}/comments', [\App\Http\Controllers\ArticleController::class, 'getArticleComments']);
+Route::get('/tags', [\App\Http\Controllers\TagController::class, 'getTags']);
+Route::get('/tags/{id}/articles', [\App\Http\Controllers\TagController::class, 'getTagArticles']);
+

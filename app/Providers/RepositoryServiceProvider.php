@@ -8,6 +8,8 @@ use App\Repositories\Eloquent\ArticleRepository;
 use App\Repositories\Eloquent\AuthRepository;
 use App\Repositories\Eloquent\Base\BaseRepository;
 use App\Repositories\Eloquent\Base\EloquentRepositoryInterface;
+use App\Repositories\Eloquent\TagRepository;
+use App\Repositories\TagRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
 
 
@@ -36,6 +38,7 @@ class RepositoryServiceProvider extends ServiceProvider
     {
         $this->app->bind(EloquentRepositoryInterface::class, BaseRepository::class);
         $this->app->bind(ArticleRepositoryInterface::class, ArticleRepository::class);
+        $this->app->bind(TagRepositoryInterface::class, TagRepository::class);
     }
 
 }

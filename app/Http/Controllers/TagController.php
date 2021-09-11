@@ -3,16 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Http\Request\ArticleRequest;
-use App\Http\Request\LoginRequest;
-use App\Http\Request\RegisterRequest;
-use App\Http\Resources\ArticleCollection;
 use App\Http\Resources\ArticleResource;
-use App\Http\Resources\CommentResource;
+use App\Http\Resources\TagResource;
+use App\Models\Article;
 use App\Models\User;
-use App\Models\UserToken;
 use App\Repositories\ArticleRepositoryInterface;
-use App\Repositories\AuthRepositoryInterface;
+use App\Repositories\TagRepositoryInterface;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -26,20 +22,20 @@ use Illuminate\Validation\Rule;
 use Psy\Util\Json;
 
 
-class ArticleController extends Controller
+class TagController extends Controller
 {
     /**
-     * @var ArticleRepositoryInterface
+     * @var TagRepositoryInterface
      */
-    protected $articleRepository;
+    protected $tagRepository;
 
     /**
-     * ArticleController constructor.
-     * @param ArticleRepositoryInterface $articleRepository
+     * TagController constructor.
+     * @param TagRepositoryInterface $tagRepository
      */
-    public function __construct(ArticleRepositoryInterface $articleRepository)
+    public function __construct(TagRepositoryInterface $tagRepository)
     {
-        $this->articleRepository = $articleRepository;
+        $this->tagRepository = $tagRepository;
     }
 
 
@@ -47,7 +43,24 @@ class ArticleController extends Controller
      * @param Request $request
      * @return JsonResponse|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function getArticle(Request $request)
+    public function getTags(Request $request)
+    {
+        $rules = $this->validateTagParams($request);
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json(['success' => 'false', 'message' => $validator->messages()], 400);
+        }
+
+        return TagResource::collection($this->tagRepository->getData($request, []));
+    }
+
+    /**
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function getTagArticles(Request $request, int $id)
     {
         $rules = $this->validateArticleParams($request);
         $validator = Validator::make($request->all(), $rules);
@@ -56,52 +69,8 @@ class ArticleController extends Controller
             return response()->json(['success' => 'false', 'message' => $validator->messages()], 400);
         }
 
-        return ArticleResource::collection($this->articleRepository->getData($request, []));
-    }
+        return ArticleResource::collection($this->tagRepository->getTagArticles($request, $id));
 
-
-    /**
-     * @param Request $request
-     * @param int $id
-     * @return JsonResponse|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
-     */
-    public function getArticleComments(Request $request, int $id)
-    {
-        $rules = $this->validateCommentParams($request);
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) {
-            return response()->json(['success' => 'false', 'message' => $validator->messages()], 400);
-        }
-
-        return CommentResource::collection($this->articleRepository->getArticleComments($request, $id));
-
-    }
-
-    /**
-     * @param $request
-     * @return array
-     */
-    public function validateCommentParams($request)
-    {
-        $rules = [
-            'sort' => ['nullable', 'string', function ($attribute, $value, $fail) {
-                if ($value !== 'created_at') {
-                    $fail('The sort parameter is invalid.');
-                }
-            }],
-            'order' => ['nullable','string', function ($attribute, $value, $fail) {
-                if ($value != 'asc' && $value != 'desc') {
-                    $fail('The order parameter is invalid.');
-                }
-            }],
-            'paginate' => 'nullable|numeric',
-            'limit' => 'nullable|numeric',
-            'page' => 'nullable|numeric'
-        ];
-
-
-        return $rules;
     }
 
     /**
@@ -124,6 +93,29 @@ class ArticleController extends Controller
             'paginate' => 'nullable|numeric',
             'limit' => 'nullable|numeric',
             'page' => 'nullable|numeric'
+        ];
+
+        return $rules;
+    }
+
+
+    /**
+     * @param $request
+     * @return array[]
+     */
+    public function validateTagParams($request)
+    {
+        $rules = [
+            'sort' => ['nullable', 'string', function ($attribute, $value, $fail) {
+                if ($value !== 'article_count') {
+                    $fail('The sort parameter is invalid.');
+                }
+            }],
+            'order' => ['nullable','string', function ($attribute, $value, $fail) {
+                if ($value != 'asc' && $value != 'desc') {
+                    $fail('The order parameter is invalid.');
+                }
+            }],
         ];
 
         return $rules;
