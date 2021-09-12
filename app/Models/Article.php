@@ -42,10 +42,10 @@ class Article extends Model
         return $this->hasManyThrough(
             Comment::class,
             ArticleComment::class,
-            'article_id', // Foreign key on the environments table...
-            'id', // Foreign key on the deployments table...
-            'id', // Local key on the projects table...
-            'comment_id' // Local key on the environments table...
+            'article_id',
+            'id',
+            'id',
+            'comment_id'
         );
     }
 
@@ -54,10 +54,10 @@ class Article extends Model
         return $this->hasManyThrough(
             Tag::class,
             ArticleTag::class,
-            'article_id', // Foreign key on the environments table...
-            'id', // Foreign key on the deployments table...
-            'id', // Local key on the projects table...
-            'tag_id' // Local key on the environments table...
+            'article_id',
+            'id',
+            'id',
+            'tag_id'
         );
     }
 

@@ -46,10 +46,10 @@ class Tag extends Model
         return $this->hasManyThrough(
             Article::class,
             ArticleTag::class,
-            'tag_id', // Foreign key on the environments table...
-            'id', // Foreign key on the deployments table...
-            'id', // Local key on the projects table...
-            'article_id' // Local key on the environments table...
+            'tag_id',
+            'id',
+            'id',
+            'article_id'
         );
     }
 
